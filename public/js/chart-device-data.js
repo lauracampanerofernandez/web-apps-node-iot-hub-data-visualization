@@ -12,19 +12,19 @@ $(document).ready(() => {
       this.deviceId = deviceId;
       this.maxLen = 50;
       this.timeData = new Array(this.maxLen);
-      this.temperatureData = new Array(this.maxLen);
-      this.humidityData = new Array(this.maxLen);
+      this.Co2Data = new Array(this.maxLen);
+      this.COVData = new Array(this.maxLen);
     }
 
-    addData(time, temperature, humidity) {
+    addData(time, Co2, COV) {
       this.timeData.push(time);
-      this.temperatureData.push(temperature);
-      this.humidityData.push(humidity || null);
+      this.Co2Data.push(Co2);
+      this.COVData.push(COV || null);
 
       if (this.timeData.length > this.maxLen) {
         this.timeData.shift();
-        this.temperatureData.shift();
-        this.humidityData.shift();
+        this.Co2Data.shift();
+        this.COVData.shift();
       }
     }
   }
@@ -58,8 +58,8 @@ $(document).ready(() => {
     datasets: [
       {
         fill: false,
-        label: 'Temperature',
-        yAxisID: 'Temperature',
+        label: 'Co2',
+        yAxisID: 'Co2',
         borderColor: 'rgba(255, 204, 0, 1)',
         pointBoarderColor: 'rgba(255, 204, 0, 1)',
         backgroundColor: 'rgba(255, 204, 0, 0.4)',
@@ -69,8 +69,8 @@ $(document).ready(() => {
       },
       {
         fill: false,
-        label: 'Humidity',
-        yAxisID: 'Humidity',
+        label: 'COV',
+        yAxisID: 'COV',
         borderColor: 'rgba(24, 120, 240, 1)',
         pointBoarderColor: 'rgba(24, 120, 240, 1)',
         backgroundColor: 'rgba(24, 120, 240, 0.4)',
@@ -84,19 +84,19 @@ $(document).ready(() => {
   const chartOptions = {
     scales: {
       yAxes: [{
-        id: 'Temperature',
+        id: 'Co2',
         type: 'linear',
         scaleLabel: {
-          labelString: 'Temperature (ºC)',
+          labelString: 'Co2 (ppm)',
           display: true,
         },
         position: 'left',
       },
       {
-        id: 'Humidity',
+        id: 'COV',
         type: 'linear',
         scaleLabel: {
-          labelString: 'Humidity (%)',
+          labelString: 'COV (ppb)',
           display: true,
         },
         position: 'right',
@@ -122,8 +122,8 @@ $(document).ready(() => {
   function OnSelectionChange() {
     const device = trackedDevices.findDevice(listOfDevices[listOfDevices.selectedIndex].text);
     chartData.labels = device.timeData;
-    chartData.datasets[0].data = device.temperatureData;
-    chartData.datasets[1].data = device.humidityData;
+    chartData.datasets[0].data = device.Co2Data;
+    chartData.datasets[1].data = device.COVData;
     myLineChart.update();
   }
   listOfDevices.addEventListener('change', OnSelectionChange, false);
@@ -140,7 +140,7 @@ $(document).ready(() => {
       console.log(messageData);
 
       // time and either temperature or humidity are required
-      if (!messageData.MessageDate || (!messageData.IotData.temperature && !messageData.IotData.humidity)) {
+      if (!messageData.MessageDate || (!messageData.IotData.Co2 && !messageData.IotData.COV)) {
         return;
       }
 
@@ -148,13 +148,13 @@ $(document).ready(() => {
       const existingDeviceData = trackedDevices.findDevice(messageData.DeviceId);
 
       if (existingDeviceData) {
-        existingDeviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity);
+        existingDeviceData.addData(messageData.MessageDate, messageData.IotData.Co2, messageData.IotData.COV);
       } else {
         const newDeviceData = new DeviceData(messageData.DeviceId);
         trackedDevices.devices.push(newDeviceData);
         const numDevices = trackedDevices.getDevicesCount();
         deviceCount.innerText = numDevices === 1 ? `${numDevices} device` : `${numDevices} devices`;
-        newDeviceData.addData(messageData.MessageDate, messageData.IotData.temperature, messageData.IotData.humidity);
+        newDeviceData.addData(messageData.MessageDate, messageData.IotData.Co2, messageData.IotData.COV);
 
         // add device to the UI list
         const node = document.createElement('option');
