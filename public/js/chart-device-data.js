@@ -71,11 +71,11 @@ $(document).ready(() => {
         fill: false,
         label: 'COV',
         yAxisID: 'COV',
-        borderColor: 'rgba(24, 120, 240, 1)',
-        pointBoarderColor: 'rgba(24, 120, 240, 1)',
-        backgroundColor: 'rgba(24, 120, 240, 0.4)',
-        pointHoverBackgroundColor: 'rgba(24, 120, 240, 1)',
-        pointHoverBorderColor: 'rgba(24, 120, 240, 1)',
+        borderColor: 'rgba(116, 75, 30, 1)',
+        pointBoarderColor: 'rgba(116, 75, 30, 1)',
+        backgroundColor: 'rgba(116, 75, 30, 0.4)',
+        pointHoverBackgroundColor: 'rgba(116, 75, 30, 1)',
+        pointHoverBorderColor: 'rgba(116, 75, 30, 1)',
         spanGaps: true,
       }
     ]
